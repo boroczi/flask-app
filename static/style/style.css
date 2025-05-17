@@ -1,0 +1,292 @@
+body {
+    background: linear-gradient(135deg, #e7ebf0 0%, #f8fafc 100%);
+    font-family: 'SF Pro Display', 'Segoe UI', 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    color: #222;
+}
+
+.container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 40px 32px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(60, 60, 90, 0.15);
+    backdrop-filter: blur(4px);
+}
+
+.navbar {
+    width: 100vw;
+    max-width: 100%;
+    background: rgba(248, 250, 252, 0.94);
+    box-shadow: 0 2px 12px 0 rgba(60, 60, 90, 0.07);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0 16px;
+    min-height: 58px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+.navbar .navbar-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #4c8efc;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    padding: 8px 0;
+    white-space: nowrap;
+}
+
+.navbar .navbar-links {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex: 1;
+}
+
+.navbar .navbar-links a {
+    color: #222;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 999px;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.navbar .navbar-links a:hover, .navbar .navbar-links a.active {
+    background: #e7ebf9;
+    color: #4c8efc;
+}
+
+@media (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0 4px;
+    }
+
+    .navbar .navbar-links {
+        gap: 4px;
+        justify-content: flex-start;
+        flex: unset;
+    }
+}
+
+h1, h2, h3 {
+    font-weight: 600;
+    color: #222;
+    letter-spacing: 0.01em;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="password"] {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: rgba(245, 247, 250, 0.9);
+    transition: border 0.2s;
+    outline: none;
+    margin-bottom: 8px;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #53a7f3;
+    background: #f0f7ff;
+}
+
+button,
+input[type="submit"] {
+    padding: 12px 0;
+    background: linear-gradient(90deg, #53a7f3 0%, #4c8efc 100%);
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 500;
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px 0 rgba(60, 60, 90, 0.08);
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: linear-gradient(90deg, #4c8efc 0%, #53a7f3 100%);
+    box-shadow: 0 4px 16px 0 rgba(60, 60, 90, 0.14);
+}
+
+.flash, .alert, .message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(90deg, #e2f1ff 0%, #f8fafc 100%);
+    color: #2563eb;
+    border: 1px solid #b6d8fc;
+    border-radius: 14px;
+    padding: 14px 24px;
+    margin-bottom: 22px;
+    font-size: 1.08rem;
+    font-weight: 500;
+    box-shadow: 0 2px 12px 0 rgba(60, 60, 90, 0.07);
+    min-height: 42px;
+    transition: all 0.18s;
+    letter-spacing: 0.01em;
+    animation: flash-in 0.5s;
+}
+
+@keyframes flash-in {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+a {
+    color: #4c8efc;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #2266aa;
+    text-decoration: underline;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 18px;
+    box-shadow: 0 4px 16px 0 rgba(60, 60, 90, 0.09);
+    padding: 24px;
+    margin-bottom: 22px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 24px 6px;
+        max-width: 98vw;
+    }
+}
+
+.subscription-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+    margin: 0 auto;
+    padding: 8px 0 32px 0;
+    max-width: 1200px;
+}
+
+.subscription-card {
+    flex: 1 1 260px;
+    max-width: 320px;
+    min-width: 240px;
+    margin: 0;
+    padding: 22px 18px 18px 18px;
+    border-radius: 20px;
+    box-shadow: 0 4px 16px 0 rgba(60, 60, 90, 0.10);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #222;
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+}
+
+.subscription-card::before {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    --sub-color: var();
+    background: var(--sub-color, #53a7f3);
+    border-radius: 20px 0 0 20px;
+}
+
+.subscription-card > * {
+    position: relative;
+    z-index: 1;
+    margin-left: 8px;
+}
+
+.subscription-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.subscription-name {
+    font-weight: bold;
+    font-size: 1.12rem;
+    letter-spacing: 0.01em;
+}
+
+.subscription-label {
+    font-size: 0.95rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    color: #2266aa;
+    margin-left: 8px;
+    font-weight: 500;
+    box-shadow: 0 1px 4px 0 rgba(60, 60, 90, 0.07);
+}
+
+.subscription-details {
+    margin-bottom: 16px;
+    font-size: 0.98rem;
+    color: #444;
+}
+
+.delete-btn {
+    background: linear-gradient(90deg, #f37253 0%, #fc4c4c 100%);
+    color: #fff;
+    font-size: 0.98rem;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 0;
+    width: 100%;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+.delete-btn:hover {
+    background: linear-gradient(90deg, #fc4c4c 0%, #f37253 100%);
+}

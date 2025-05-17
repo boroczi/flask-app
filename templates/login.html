@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block title %}Bejelentkezés{% endblock %}
+{% block content %}
+<h2>Bejelentkezés</h2>
+<form method="POST">
+    <label for="username">Felhasználónév:</label>
+    <input type="text" id="username" name="username" required>
+    <label for="password">Jelszó:</label>
+    <input type="password" id="password" name="password" required>
+    <button type="submit">Bejelentkezés</button>
+</form>
+{% endblock %}

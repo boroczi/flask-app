@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="hu">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}mySub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/style.css') }}">
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-name" href="{{ url_for('index') }}">mySub</a>
+    <div class="navbar-links">
+        <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Főoldal</a>
+        {% if not session.get('user_id') %}
+        <a href="{{ url_for('login') }}" class="{% if request.endpoint == 'login' %}active{% endif %}">Bejelentkezés</a>
+        <a href="{{ url_for('register') }}" class="{% if request.endpoint == 'register' %}active{% endif %}">Regisztráció</a>
+        {% else %}
+        <a href="{{ url_for('subscriptions') }}" class="{% if request.endpoint == 'subscriptions' %}active{% endif %}">Feliratkozások</a>
+        <a href="{{ url_for('logout') }}">Kijelentkezés</a>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

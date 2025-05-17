@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block title %}Főoldal{% endblock %}
+{% block content %}
+<h1>Üdvözöllek a mySub-on!</h1>
+{% if user %}
+<p>Sikeresen be vagy jelentkezve: <b>{{ user.username }}</b></p>
+{% else %}
+<p>Kérlek jelentkezz be vagy regisztrálj.</p>
+{% endif %}
+{% endblock %}

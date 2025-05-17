@@ -1,0 +1,74 @@
+{% extends "main.html" %}
+{% block title %}Feliratkozások{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Előfizetések kezelése</h2>
+
+    <div class="card" style="margin-bottom: 32px;">
+        <form method="POST" class="subscription-form">
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <div style="flex:2">
+                    <label for="name">Név</label>
+                    <input type="text" name="name" id="name" required>
+                </div>
+                <div style="flex:1">
+                    <label for="cost">Díj (Ft/hó)</label>
+                    <input type="number" step="0.01" name="cost" id="cost" required>
+                </div>
+                <div style="flex:1">
+                    <label for="billing_date">Számlázás napja</label>
+                    <input type="date" name="billing_date" id="billing_date" required>
+                </div>
+                <div style="flex:1">
+                    <label for="color">Szín</label>
+                    <input type="color" name="color" id="color" value="#53a7f3"
+                           style="width: 40px; height: 40px; border: none;">
+                </div>
+            </div>
+            <div style="margin-top: 12px;">
+                <label for="label_id">Címke</label>
+                <select name="label_id" id="label_id" onchange="toggleNewLabelInput(this)">
+                    <option value="">Nincs</option>
+                    {% for label in labels %}
+                    <option value="{{ label.id }}">{{ label.name }}</option>
+                    {% endfor %}
+                    <option value="new">+ Új címke</option>
+                </select>
+                <div id="new_label_fields" style="display:none; margin-top: 8px;">
+                    <input type="text" name="new_label_name" placeholder="Címke neve">
+                    <input type="color" name="new_label_color" value="#e2f1ff"
+                           style="width:30px; height:30px; border:none;">
+                </div>
+            </div>
+            <input type="submit" value="Előfizetés hozzáadása" style="margin-top:14px;">
+        </form>
+    </div>
+
+    <div class="subscription-list">
+        {% for sub in subscriptions %}
+        <div class="subscription-card" style="--sub-color: {{ sub.color }};">
+            <div class="subscription-header">
+                <span class="subscription-name">{{ sub.name }}</span>
+                {% if sub.label %}
+                <span class="subscription-label" style="--sub-color: {{ sub.label.color }};">{{ sub.label.name }}</span>
+                {% endif %}
+            </div>
+            <div class="subscription-details">
+                <div><strong>Díj:</strong> {{ "%.2f"|format(sub.cost) }} Ft/hó</div>
+                <div><strong>Számlázás:</strong> {{ sub.billing_date.strftime('%Y-%m-%d') }}</div>
+            </div>
+            <form method="POST" action="{{ url_for('delete_subscription', sub_id=sub.id) }}"
+                  onsubmit="return confirm('Biztosan törlöd?')">
+                <button type="submit" class="delete-btn">Törlés</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function toggleNewLabelInput(selected) {
+        document.getElementById('new_label_fields').style.display = selected.value === 'new' ? 'block' : 'none';
+    }
+</script>
+{% endblock %}
