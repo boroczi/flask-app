@@ -198,14 +198,20 @@ a:hover {
     }
 }
 
+.subscription-list-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .subscription-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
-    justify-content: center;
-    margin: 0 auto;
-    padding: 8px 0 32px 0;
-    max-width: 1200px;
+    gap: 16px;
+}
+
+.subscription-list > * {
+    flex: 1 0 200px;
+    min-width: 200px;
 }
 
 .subscription-card {
@@ -259,11 +265,13 @@ a:hover {
 
 .subscription-label {
     font-size: 0.95rem;
+    font-weight: 400;
     padding: 3px 10px;
     border-radius: 12px;
-    color: #2266aa;
+    --sub-color: var();
+    outline: var(--sub-color) 2px solid;
+    color: #404040;
     margin-left: 8px;
-    font-weight: 500;
     box-shadow: 0 1px 4px 0 rgba(60, 60, 90, 0.07);
 }
 
