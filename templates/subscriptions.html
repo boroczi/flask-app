@@ -1,10 +1,11 @@
 {% extends "main.html" %}
 {% block title %}Feliratkozások{% endblock %}
 {% block content %}
-<div class="subscription-list-container">
+<div class="container wide-container">
     <h2>Előfizetések kezelése</h2>
 
-    <div class="card" style="margin-bottom: 32px;">
+    <button class="toggle-sub-form-btn" type="button" onclick="toggleSubscriptionForm()">+ Előfizetés hozzáadása</button>
+    <div id="subscriptionFormCard" class="card" style="margin-bottom: 32px; display: none;">
         <form method="POST" class="subscription-form">
             <div style="display: flex; gap: 16px; flex-wrap: wrap;">
                 <div style="flex:2">
@@ -21,8 +22,7 @@
                 </div>
                 <div style="flex:1">
                     <label for="color">Szín</label>
-                    <input type="color" name="color" id="color" value="#53a7f3"
-                           style="width: 40px; height: 40px; border: none;">
+                    <input type="color" name="color" id="color" value="#53a7f3">
                 </div>
             </div>
             <div style="margin-top: 12px;">
@@ -36,8 +36,7 @@
                 </select>
                 <div id="new_label_fields" style="display:none; margin-top: 8px;">
                     <input type="text" name="new_label_name" placeholder="Címke neve">
-                    <input type="color" name="new_label_color" value="#e2f1ff"
-                           style="width:30px; height:30px; border:none;">
+                    <input type="color" name="new_label_color" value="#e2f1ff">
                 </div>
             </div>
             <input type="submit" value="Előfizetés hozzáadása" style="margin-top:14px;">
@@ -57,8 +56,7 @@
                 <div><strong>Díj:</strong> {{ "%.2f"|format(sub.cost) }} Ft/hó</div>
                 <div><strong>Számlázás:</strong> {{ sub.billing_date.strftime('%Y-%m-%d') }}</div>
             </div>
-            <form method="POST" action="{{ url_for('delete_subscription', sub_id=sub.id) }}"
-                  onsubmit="return confirm('Biztosan törlöd?')">
+            <form method="POST" action="{{ url_for('delete_subscription', sub_id=sub.id) }}" onsubmit="return confirm('Biztosan törlöd?')">
                 <button type="submit" class="delete-btn">Törlés</button>
             </form>
         </div>
@@ -67,6 +65,11 @@
 </div>
 
 <script>
+    function toggleSubscriptionForm() {
+        var el = document.getElementById('subscriptionFormCard');
+        el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'block' : 'none';
+    }
+
     function toggleNewLabelInput(selected) {
         document.getElementById('new_label_fields').style.display = selected.value === 'new' ? 'block' : 'none';
     }
