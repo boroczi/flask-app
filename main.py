@@ -35,7 +35,7 @@ class Subscription(db.Model):
 
 class Label(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(40), unique=True, nullable=False)
+    name = db.Column(db.String(40), nullable=False)
     color = db.Column(db.String(7), nullable=False, default="#e2f1ff")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
