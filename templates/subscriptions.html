@@ -1,8 +1,13 @@
 {% extends "main.html" %}
 {% block title %}Feliratkozások{% endblock %}
 {% block content %}
-<div class="container wide-container">
+<div class="sub-container">
     <h2>Előfizetések kezelése</h2>
+
+    <div class="subscription-summary">
+        <p><strong>Összes előfizetés költsége:</strong> {{ total_cost }} Ft/hó</p>
+        <p><strong>Hónapban hátralévő költség:</strong> {{ remaining_cost }} Ft</p>
+    </div>
 
     <button class="toggle-sub-form-btn" type="button" onclick="toggleSubscriptionForm()">+ Előfizetés hozzáadása</button>
     <div id="subscriptionFormCard" class="card" style="margin-bottom: 32px; display: none;">
@@ -53,8 +58,8 @@
                 {% endif %}
             </div>
             <div class="subscription-details">
-                <div><strong>Díj:</strong> {{ "%.2f"|format(sub.cost) }} Ft/hó</div>
-                <div><strong>Számlázás:</strong> {{ sub.billing_date.strftime('%Y-%m-%d') }}</div>
+                <div><strong>Díj:</strong> {{ sub.cost|int }} Ft/hó</div>
+                <div><strong>Számlázás:</strong> {{ sub.next_billing_date.strftime('%Y-%m-%d') }}</div>
             </div>
             <form method="POST" action="{{ url_for('delete_subscription', sub_id=sub.id) }}" onsubmit="return confirm('Biztosan törlöd?')">
                 <button type="submit" class="delete-btn">Törlés</button>

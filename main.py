@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'b2c8d4f19f8e2b7d9a6e5f4c1b3f2e8d4c6a7b8c'
@@ -94,7 +94,7 @@ def logout():
 @app.route('/subscriptions', methods=['GET', 'POST'])
 def subscriptions():
     if 'user_id' not in session:
-            return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
         name = request.form['name']
@@ -124,10 +124,27 @@ def subscriptions():
         db.session.commit()
         flash("Előfizetés sikeresen hozzáadva!", "success")
         return redirect(url_for('subscriptions'))
+    
     user_id = session['user_id']
-    all_subs = Subscription.query.filter_by(user_id=user_id).order_by(Subscription.billing_date).all()
+    all_subs = Subscription.query.filter_by(user_id=user_id).all()
+
+    for sub in all_subs:
+        sub.next_billing_date = calculate_next_billing_date(sub.billing_date)
+
+    all_subs.sort(key=lambda sub: sub.next_billing_date)
+
+    total_cost = int(sum(sub.cost for sub in all_subs))
+    today = datetime.today().date()
+    remaining_cost = int(sum(sub.cost for sub in all_subs if sub.billing_date >= today))
+
     labels = Label.query.all()
-    return render_template('subscriptions.html', subscriptions=all_subs, labels=labels)
+    return render_template(
+        'subscriptions.html',
+        subscriptions=all_subs,
+        labels=labels,
+        total_cost=total_cost,
+        remaining_cost=remaining_cost
+    )
 
 @app.route('/subscriptions/delete/<int:sub_id>', methods=['POST'])
 def delete_subscription(sub_id):
@@ -139,7 +156,16 @@ def delete_subscription(sub_id):
     flash("Előfizetés törölve!", "success")
     return redirect(url_for('subscriptions'))
 
+def calculate_next_billing_date(billing_date):
+    today = datetime.today().date()
+    if billing_date >= today:
+        return billing_date
+    while billing_date < today:
+        billing_date = billing_date.replace(month=billing_date.month + 1) if billing_date.month < 12 else billing_date.replace(year=billing_date.year + 1, month=1)
+    return billing_date
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
+
