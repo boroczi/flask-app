@@ -7,30 +7,36 @@
     <div class="subscription-summary">
         <p><strong>Összes előfizetés költsége:</strong> {{ total_cost }} Ft/hó</p>
         <p><strong>Hónapban hátralévő költség:</strong> {{ remaining_cost }} Ft</p>
+        {% if subscriptions|length > 0 %}
         <div style="margin: 32px 0;">
             <canvas id="monthlyChart"></canvas>
         </div>
+        {% endif %}
     </div>
 
     <button class="toggle-sub-form-btn" type="button" onclick="toggleSubscriptionForm()">+ Előfizetés hozzáadása</button>
     <div id="subscriptionFormCard" class="card" style="margin-bottom: 32px; display: none;">
         <form method="POST" class="subscription-form">
             <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-                <div style="flex:2">
-                    <label for="name">Név</label>
-                    <input type="text" name="name" id="name" required>
+                <div>
+                    <div style="flex:2">
+                        <label for="name">Név</label>
+                        <input type="text" name="name" id="name" required>
+                    </div>
+                    <div style="flex:1">
+                        <label for="cost">Díj</label>
+                        <input type="number" step="0.01" name="cost" id="cost" required>
+                    </div>
                 </div>
-                <div style="flex:1">
-                    <label for="cost">Díj (Ft/hó)</label>
-                    <input type="number" step="0.01" name="cost" id="cost" required>
-                </div>
+                <div>
                 <div style="flex:1">
                     <label for="billing_date">Számlázás napja</label>
                     <input type="date" name="billing_date" id="billing_date" required>
                 </div>
                 <div style="flex:1">
-                    <label for="end_date">Várható befejezés (opcionális)</label>
+                    <label for="end_date">Várható befejezés</label>
                     <input type="date" name="end_date" id="end_date">
+                </div>
                 </div>
                 <div style="flex:1">
                     <label for="color">Szín</label>
