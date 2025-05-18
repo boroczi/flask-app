@@ -28,7 +28,7 @@ class Subscription(db.Model):
     billing_date = db.Column(db.Date, nullable=False)
     color = db.Column(db.String(7), nullable=False, default="#53a7f3")
     label_id = db.Column(db.Integer, db.ForeignKey('label.id'), nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)   # <--- ÚJ!
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     label = db.relationship('Label', backref='subscriptions')
     user = db.relationship('User', backref='subscriptions')
