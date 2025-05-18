@@ -37,6 +37,9 @@ class Label(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), unique=True, nullable=False)
     color = db.Column(db.String(7), nullable=False, default="#e2f1ff")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    user = db.relationship('User', backref='labels')
 
 @app.route('/')
 def index():
@@ -106,7 +109,7 @@ def subscriptions():
             label_name = request.form.get('new_label_name')
             label_color = request.form.get('new_label_color', '#e2f1ff')
             if label_name:
-                new_label = Label(name=label_name, color=label_color)
+                new_label = Label(name=label_name, color=label_color, user_id=session['user_id'])
                 db.session.add(new_label)
                 db.session.commit()
                 label_id = new_label.id
@@ -137,7 +140,7 @@ def subscriptions():
     today = datetime.today().date()
     remaining_cost = int(sum(sub.cost for sub in all_subs if sub.billing_date >= today))
 
-    labels = Label.query.all()
+    labels = Label.query.filter_by(user_id=user_id).all()
     return render_template(
         'subscriptions.html',
         subscriptions=all_subs,
@@ -168,4 +171,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
