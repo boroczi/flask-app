@@ -7,6 +7,9 @@
     <div class="subscription-summary">
         <p><strong>Összes előfizetés költsége:</strong> {{ total_cost }} Ft/hó</p>
         <p><strong>Hónapban hátralévő költség:</strong> {{ remaining_cost }} Ft</p>
+        <div style="margin: 32px 0;">
+            <canvas id="monthlyChart"></canvas>
+        </div>
     </div>
 
     <button class="toggle-sub-form-btn" type="button" onclick="toggleSubscriptionForm()">+ Előfizetés hozzáadása</button>
@@ -24,6 +27,10 @@
                 <div style="flex:1">
                     <label for="billing_date">Számlázás napja</label>
                     <input type="date" name="billing_date" id="billing_date" required>
+                </div>
+                <div style="flex:1">
+                    <label for="end_date">Várható befejezés (opcionális)</label>
+                    <input type="date" name="end_date" id="end_date">
                 </div>
                 <div style="flex:1">
                     <label for="color">Szín</label>
@@ -69,6 +76,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     function toggleSubscriptionForm() {
         var el = document.getElementById('subscriptionFormCard');
@@ -78,5 +86,33 @@
     function toggleNewLabelInput(selected) {
         document.getElementById('new_label_fields').style.display = selected.value === 'new' ? 'block' : 'none';
     }
+
+    const monthlyLabels = {{ monthly_labels|tojson }};
+    const monthlyValues = {{ monthly_values|tojson }};
+
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: monthlyLabels,
+            datasets: [{
+                label: 'Havi összes költség (Ft)',
+                data: monthlyValues,
+                backgroundColor: 'rgba(83, 167, 243, 0.5)',
+                borderColor: 'rgba(83, 167, 243, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) { return value + ' Ft'; }
+                    }
+                }
+            }
+        }
+    });
 </script>
 {% endblock %}

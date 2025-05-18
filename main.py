@@ -1,7 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, session, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from collections import defaultdict
+import calendar
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'b2c8d4f19f8e2b7d9a6e5f4c1b3f2e8d4c6a7b8c'
@@ -29,6 +31,7 @@ class Subscription(db.Model):
     color = db.Column(db.String(7), nullable=False, default="#53a7f3")
     label_id = db.Column(db.Integer, db.ForeignKey('label.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    end_date = db.Column(db.Date, nullable=True)
 
     label = db.relationship('Label', backref='subscriptions')
     user = db.relationship('User', backref='subscriptions')
@@ -105,6 +108,8 @@ def subscriptions():
         billing_date = datetime.strptime(request.form['billing_date'], '%Y-%m-%d').date()
         color = request.form['color']
         label_id = request.form.get('label_id') or None
+        end_date_raw = request.form.get('end_date')
+        end_date = datetime.strptime(end_date_raw, '%Y-%m-%d').date() if end_date_raw else None
         if label_id == "new":
             label_name = request.form.get('new_label_name')
             label_color = request.form.get('new_label_color', '#e2f1ff')
@@ -121,7 +126,8 @@ def subscriptions():
             billing_date=billing_date,
             color=color,
             label_id=label_id,
-            user_id=session['user_id']
+            user_id=session['user_id'],
+            end_date=end_date
         )
         db.session.add(subscription)
         db.session.commit()
@@ -141,12 +147,43 @@ def subscriptions():
     remaining_cost = int(sum(sub.cost for sub in all_subs if sub.billing_date >= today))
 
     labels = Label.query.filter_by(user_id=user_id).all()
+
+    now = datetime.now()
+    year = now.year
+    monthly_costs = defaultdict(float)
+
+    for m in range(1, 13):
+        month_start = date(year, m, 1)
+        last_day = calendar.monthrange(year, m)[1]
+        month_end = date(year, m, last_day)
+        for sub in all_subs:
+            if sub.billing_date <= month_end and (sub.end_date is None or sub.end_date >= month_start):
+                monthly_costs[m] += sub.cost
+
+    monthly_labels = [
+        "Január",
+        "Február",
+        "Március",
+        "Április",
+        "Május",
+        "Június",
+        "Július",
+        "Augusztus",
+        "Szeptember",
+        "Október",
+        "November",
+        "December"
+    ]
+    monthly_values = [monthly_costs[m] for m in range(1, 13)]
+
     return render_template(
         'subscriptions.html',
         subscriptions=all_subs,
         labels=labels,
         total_cost=total_cost,
-        remaining_cost=remaining_cost
+        remaining_cost=remaining_cost,
+        monthly_labels=monthly_labels,
+        monthly_values=monthly_values
     )
 
 @app.route('/subscriptions/delete/<int:sub_id>', methods=['POST'])
